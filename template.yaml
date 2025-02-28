@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Domits
+Transform:
+- AWS::Serverless-2016-10-31
+
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Resources:
+
+Globals:
+  Function:
+    LoggingConfig:
+      LogFormat: JSON
