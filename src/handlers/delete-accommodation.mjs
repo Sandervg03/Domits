@@ -33,9 +33,16 @@ export class AccommodationService {
     _hostId;
     _images;
     _repository;
+    _cognitoRepository;
 
-    constructor(id, accessToken, repository = new AccommodationRepository()) {
+    constructor(
+        id,
+        accessToken,
+        repository = new AccommodationRepository(),
+        cognitoRepository = new CognitoRepository()
+    ) {
         this._repository = repository;
+        this._cognitoRepository = cognitoRepository;
         return (async () => {
             await this.setAccommodationInfo(id);
             await this.authorizeDeleteRequest(accessToken);
@@ -56,7 +63,11 @@ export class AccommodationService {
     }
 
     get repository() {
-        return this._repository
+        return this._repository;
+    }
+
+    get cognitoRepository() {
+        return this._cognitoRepository;
     }
 
     async setAccommodationInfo(id) {
@@ -75,7 +86,7 @@ export class AccommodationService {
 
     async authorizeDeleteRequest(accessToken) {
         try {
-            const user = await cognitoClient.send(new GetUserCommand({AccessToken: accessToken}));
+            const user = await this.cognitoRepository.getUser(accessToken);
             if (user.Username != this.hostId) {
                 throw "User is not the owner of this accommodation."
             }
@@ -117,5 +128,15 @@ export class AccommodationRepository {
             Key: {ID: id}
         };
         return await ddbDocClient.send(new DeleteCommand(params));
+    }
+}
+
+export class CognitoRepository {
+
+    async getUser(accessToken) {
+        const params = new GetUserCommand({
+            AccessToken: accessToken
+        })
+        return await cognitoClient.send(params);
     }
 }
