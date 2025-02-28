@@ -8,7 +8,7 @@ import accommodationItem from "../../mock-items/delete-accommodation/accommodati
 import userItem from "../../mock-items/delete-accommodation/user-item.json" assert { type: "json" };
 import eventItem from "../../events/delete-accommodation/event-item.json" assert { type: "json" };
 
-describe('Test getAllItemsHandler', () => {
+describe('delete accommodation lambda', () => {
     const ddbMock = mockClient(DynamoDBDocumentClient);
     const s3Mock = mockClient(S3Client);
     const cognitoMock = mockClient(CognitoIdentityProviderClient)
